@@ -214,13 +214,13 @@
     <div class="container">
         <h1>Absensi Anggota/Player MB UMM</h1>
         <p>Arahkan kamera ke QR code anggota untuk mencatat absensi.</p>
-        <video id="video" width="300" height="200" autoplay></video>
-        <img id="logo" src="1.png" alt="Logo MB UMM" style="display: none;"> <!-- Logo lokal, ganti path jika perlu -->
+        <video id="video" width="300" height="200" autoplay style="display: none;"></video>
+        <img id="logo" src="1.png" alt="Logo MB UMM"> <!-- Logo lokal, ganti path jika perlu -->
         <canvas id="canvas" width="300" height="200" style="display:none;"></canvas>
-        <button id="toggleScan">Stop Scanning</button>
+        <button id="toggleScan">Start Scanning</button>
         <div id="result"></div>
         <div id="error"></div>
-        <div id="status"></div>
+        <div id="status">Siap untuk memulai scanning. Klik tombol untuk mengaktifkan kamera.</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
@@ -238,7 +238,7 @@
         let lastSentData = null;  // Untuk melacak data QR terakhir yang dikirim
         let lastSentTime = 0;     // Waktu terakhir pengiriman (dalam ms)
         const cooldownPeriod = 3000;  // Cooldown 3 detik untuk mencegah spam
-        let scanningEnabled = true;   // Flag untuk mengontrol scanning
+        let scanningEnabled = false;   // Flag untuk mengontrol scanning, mulai dengan false
 
         // Array logo untuk berganti-ganti
         const logos = ['1.png', '2.png']; // Asumsikan ada logo.png dan logo2.png
@@ -319,9 +319,6 @@
             }
         }
 
-        // Mulai kamera saat load
-        startCamera();
-
         // Event listener untuk tombol toggle
         toggleScanBtn.addEventListener('click', function() {
             if (scanningEnabled) {
@@ -371,7 +368,8 @@
                         scanningEnabled = false;
                         statusDiv.textContent = 'Memproses absensi...';
 
-                        resultDiv.textContent = `Absensi tercatat untuk: ${parsed.Nama} (Section: ${parsed.Section})`;
+                        // Pesan result dengan nama dan section lebih besar
+                        resultDiv.innerHTML = `<b><i>Berhasil</i></b>: <span style="font-size: 1.5em;">${parsed.Nama} (${parsed.Section})</span> - <b><i>Data dikirim</i></b>!`;
                         
                         // Kirim data ke Google Apps Script via GET
                         const scriptUrl = 'https://script.google.com/macros/s/AKfycbw9jixiqNZh2JvAgzjrVi2YWVWYYiATGucsi0peIyGl9I3RuO04rYwCTI5H5gWBxH1jzQ/exec';  // Ganti YOUR_SCRIPT_ID
@@ -399,7 +397,7 @@
                         .then(data => {
                             console.log('Response data:', data);  // Debug log
                             if (data.success) {
-                                resultDiv.textContent += ' - Data berhasil dikirim!';
+                                // Konfirmasi keberhasilan sudah ditampilkan di atas
                                 lastSentData = code.data;  // Simpan data QR yang berhasil dikirim
                                 lastSentTime = currentTime;  // Simpan waktu pengiriman
                                 statusDiv.textContent = 'Absensi berhasil. Scanning dinonaktifkan selama 3 detik.';
