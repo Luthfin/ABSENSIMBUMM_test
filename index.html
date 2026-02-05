@@ -64,6 +64,23 @@
             display: block;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             transition: box-shadow 0.3s ease;
+            width: 300px;
+            height: 200px;
+            object-fit: cover; /* Agar gambar/logo pas di dalam border */
+        }
+
+        /* Logo tanpa border dan box-shadow untuk menyatu dengan latar */
+        #logo {
+            border: none;
+            box-shadow: none;
+            margin: 15px auto;
+            border-radius: 15px;
+            display: block;
+            transition: opacity 0.5s ease; /* Transisi opacity untuk fade in/out */
+            width: 300px;
+            height: 200px;
+            object-fit: cover; /* Agar gambar/logo pas di dalam border */
+            opacity: 1; /* Mulai dengan opacity penuh */
         }
 
         video:hover, canvas:hover {
@@ -158,7 +175,7 @@
                 border-radius: 15px;
             }
 
-            video, canvas {
+            video, canvas, #logo {
                 width: 100%;
                 max-width: 300px;
                 height: auto; /* Sesuaikan tinggi otomatis */
@@ -187,7 +204,7 @@
                 padding: 15px;
             }
 
-            video, canvas {
+            video, canvas, #logo {
                 max-width: 250px;
             }
         }
@@ -198,6 +215,7 @@
         <h1>Absensi Anggota/Player MB UMM</h1>
         <p>Arahkan kamera ke QR code anggota untuk mencatat absensi.</p>
         <video id="video" width="300" height="200" autoplay></video>
+        <img id="logo" src="1.png" alt="Logo MB UMM" style="display: none;"> <!-- Logo lokal, ganti path jika perlu -->
         <canvas id="canvas" width="300" height="200" style="display:none;"></canvas>
         <button id="toggleScan">Stop Scanning</button>
         <div id="result"></div>
@@ -208,6 +226,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <script>
         const video = document.getElementById('video');
+        const logo = document.getElementById('logo'); // Elemen logo
         const canvas = document.getElementById('canvas');
         const resultDiv = document.getElementById('result');
         const errorDiv = document.getElementById('error');
@@ -220,6 +239,24 @@
         let lastSentTime = 0;     // Waktu terakhir pengiriman (dalam ms)
         const cooldownPeriod = 3000;  // Cooldown 3 detik untuk mencegah spam
         let scanningEnabled = true;   // Flag untuk mengontrol scanning
+
+        // Array logo untuk berganti-ganti
+        const logos = ['1.png', '2.png']; // Asumsikan ada logo.png dan logo2.png
+        let logoIndex = 0;
+
+        // Fungsi untuk berganti logo setiap 3 detik dengan fade in/out jika logo sedang ditampilkan
+        setInterval(() => {
+            if (logo.style.display === 'block') {
+                // Fade out
+                logo.style.opacity = '0';
+                // Setelah fade out selesai (0.5s), ganti src dan fade in
+                setTimeout(() => {
+                    logoIndex = (logoIndex + 1) % logos.length;
+                    logo.src = logos[logoIndex];
+                    logo.style.opacity = '1';
+                }, 500);
+            }
+        }, 3000);
 
         // Fungsi untuk mendapatkan device ID kamera belakang utama (bukan wide)
         async function getRearCameraDeviceId() {
@@ -259,6 +296,8 @@
                 stream = await navigator.mediaDevices.getUserMedia(constraints);
                 video.srcObject = stream;
                 video.play();
+                video.style.display = 'block'; // Tampilkan video
+                logo.style.display = 'none'; // Sembunyikan logo
                 requestAnimationFrame(tick);
                 statusDiv.textContent = 'Kamera aktif. Siap untuk scan.';
             } catch (err) {
@@ -273,6 +312,9 @@
                 stream.getTracks().forEach(track => track.stop());
                 stream = null;
                 video.srcObject = null;
+                video.style.display = 'none'; // Sembunyikan video
+                logo.style.display = 'block'; // Tampilkan logo
+                // Logo sudah tanpa border dan box-shadow di CSS, tidak perlu set lagi
                 statusDiv.textContent = 'Kamera dinonaktifkan.';
             }
         }
