@@ -5,70 +5,191 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Scanner for Absensi</title>
     <style>
+        /* Reset dan base styling */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font lebih modern */
             text-align: center;
-            margin: 20px;
-            background-color: #ffffff; /* Putih */
-            color: #000000; /* Hitam untuk teks default */
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); /* Gradient background yang lembut */
+            color: #333; /* Teks gelap untuk kontras */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+
         h1 {
-            color: #800000; /* Maroon */
-            font-size: 28px;
-            margin-bottom: 10px;
+            color: #800000; /* Maroon tetap */
+            font-size: 2.5rem; /* Responsif dengan rem */
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Bayangan teks untuk efek */
+            animation: fadeIn 1s ease-in; /* Animasi masuk */
         }
+
         p {
-            color: #000000; /* Hitam */
-            font-size: 16px;
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
+
+        /* Container utama */
+        .container {
+            max-width: 450px;
+            width: 100%;
+            padding: 30px;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0); /* Gradient putih ke abu */
+            border-radius: 20px; /* Lebih bulat */
+            box-shadow: 0 10px 30px rgba(128, 0, 0, 0.2); /* Bayangan maroon yang lebih dramatis */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transisi halus */
+        }
+
+        .container:hover {
+            transform: translateY(-5px); /* Efek lift saat hover */
+            box-shadow: 0 15px 40px rgba(128, 0, 0, 0.3);
+        }
+
+        /* Video dan Canvas */
         video, canvas {
-            border: 2px solid #800000; /* Maroon */
-            margin: 10px;
-            border-radius: 8px;
+            border: 3px solid #800000;
+            margin: 15px auto;
+            border-radius: 15px;
+            display: block;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s ease;
         }
+
+        video:hover, canvas:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Button */
+        button {
+            background: linear-gradient(45deg, #800000, #a00000); /* Gradient maroon */
+            color: #ffffff;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 25px; /* Lebih bulat */
+            margin: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(128, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #a00000, #c00000); /* Gradient lebih terang */
+            transform: scale(1.05); /* Efek zoom */
+            box-shadow: 0 6px 15px rgba(128, 0, 0, 0.4);
+        }
+
+        button:active {
+            transform: scale(0.98); /* Efek tekan */
+        }
+
+        /* Div untuk result, error, status */
         #result {
             margin-top: 20px;
-            font-size: 18px;
-            color: #ffffff; /* Putih */
-            background-color: #800000; /* Maroon */
-            padding: 10px;
-            border-radius: 5px;
+            font-size: 1.2rem;
+            color: #ffffff;
+            background: linear-gradient(45deg, #800000, #a00000);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(128, 0, 0, 0.3);
+            animation: slideIn 0.5s ease-out; /* Animasi masuk */
         }
+
         #error {
-            color: #800000; /* Maroon */
-            background-color: #ffcccc; /* Merah muda terang untuk error */
-            padding: 10px;
-            border-radius: 5px;
+            color: #d32f2f; /* Merah gelap */
+            background: linear-gradient(45deg, #ffebee, #ffcdd2);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.2);
+            animation: slideIn 0.5s ease-out;
         }
+
         #status {
-            margin-top: 10px;
-            font-size: 16px;
-            color: #000000; /* Hitam */
-            background-color: #e0e0e0; /* Abu-abu terang */
-            padding: 10px;
-            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #333;
+            background: linear-gradient(45deg, #e8f5e8, #c8e6c9); /* Hijau lembut */
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease-out;
         }
-        button {
-            background-color: #800000; /* Maroon */
-            color: #ffffff; /* Putih */
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin: 10px;
-            transition: background-color 0.3s;
+
+        /* Animasi */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        button:hover {
-            background-color: #a00000; /* Maroon lebih terang */
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f8f8; /* Abu-abu sangat terang */
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(128, 0, 0, 0.3); /* Bayangan maroon lembut */
+
+        /* Responsif untuk HP atau mode potret */
+        @media (max-width: 768px) or (orientation: portrait) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem; /* Lebih kecil di HP */
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .container {
+                max-width: 100%;
+                padding: 20px;
+                border-radius: 15px;
+            }
+
+            video, canvas {
+                width: 100%;
+                max-width: 300px;
+                height: auto; /* Sesuaikan tinggi otomatis */
+            }
+
+            button {
+                width: 100%;
+                max-width: 250px;
+                padding: 15px;
+                font-size: 1.2rem;
+            }
+
+            #result, #error, #status {
+                font-size: 1rem;
+                padding: 12px;
+            }
+        }
+
+        /* Untuk layar sangat kecil (HP lama) */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            video, canvas {
+                max-width: 250px;
+            }
         }
     </style>
 </head>
@@ -100,20 +221,50 @@
         const cooldownPeriod = 3000;  // Cooldown 3 detik untuk mencegah spam
         let scanningEnabled = true;   // Flag untuk mengontrol scanning
 
+        // Fungsi untuk mendapatkan device ID kamera belakang utama (bukan wide)
+        async function getRearCameraDeviceId() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                
+                // Cari kamera belakang (environment) yang bukan wide atau ultra-wide
+                // Prioritas: hindari label yang mengandung "wide", "ultra", atau "telephoto"
+                let rearCamera = videoDevices.find(device => 
+                    device.facingMode === 'environment' && 
+                    !device.label.toLowerCase().includes('wide') && 
+                    !device.label.toLowerCase().includes('ultra') && 
+                    !device.label.toLowerCase().includes('telephoto')
+                );
+                
+                // Jika tidak ditemukan, ambil kamera belakang pertama
+                if (!rearCamera) {
+                    rearCamera = videoDevices.find(device => device.facingMode === 'environment');
+                }
+                
+                return rearCamera ? rearCamera.deviceId : null;
+            } catch (err) {
+                console.error('Error enumerating devices:', err);
+                return null;
+            }
+        }
+
         // Fungsi untuk memulai kamera
-        function startCamera() {
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-                .then(function(s) {
-                    stream = s;
-                    video.srcObject = stream;
-                    video.play();
-                    requestAnimationFrame(tick);
-                    statusDiv.textContent = 'Kamera aktif. Siap untuk scan.';
-                })
-                .catch(function(err) {
-                    errorDiv.textContent = 'Error accessing camera: ' + err.message;
-                    console.error('Camera error:', err);
-                });
+        async function startCamera() {
+            try {
+                const deviceId = await getRearCameraDeviceId();
+                const constraints = deviceId 
+                    ? { video: { deviceId: { exact: deviceId } } } 
+                    : { video: { facingMode: 'environment' } }; // Fallback jika enumerate gagal
+                
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = stream;
+                video.play();
+                requestAnimationFrame(tick);
+                statusDiv.textContent = 'Kamera aktif. Siap untuk scan.';
+            } catch (err) {
+                errorDiv.textContent = 'Error accessing camera: ' + err.message;
+                console.error('Camera error:', err);
+            }
         }
 
         // Fungsi untuk menghentikan kamera
