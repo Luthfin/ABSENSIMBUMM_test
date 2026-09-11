@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Scanner for Absensi</title>
+    <title>QR Code Scanner for Absensi MB UMM</title>
     <style>
         /* Reset dan base styling */
         * {
@@ -13,12 +13,12 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font lebih modern */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
             margin: 0;
             padding: 20px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); /* Gradient background yang lembut */
-            color: #333; /* Teks gelap untuk kontras */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -26,11 +26,11 @@
         }
 
         h1 {
-            color: #800000; /* Maroon tetap */
-            font-size: 2.5rem; /* Responsif dengan rem */
+            color: #800000;
+            font-size: 2.5rem;
             margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Bayangan teks untuk efek */
-            animation: fadeIn 1s ease-in; /* Animasi masuk */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in;
         }
 
         p {
@@ -40,23 +40,21 @@
             line-height: 1.5;
         }
 
-        /* Container utama */
         .container {
             max-width: 450px;
             width: 100%;
             padding: 30px;
-            background: linear-gradient(145deg, #ffffff, #f0f0f0); /* Gradient putih ke abu */
-            border-radius: 20px; /* Lebih bulat */
-            box-shadow: 0 10px 30px rgba(128, 0, 0, 0.2); /* Bayangan maroon yang lebih dramatis */
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transisi halus */
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(128, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .container:hover {
-            transform: translateY(-5px); /* Efek lift saat hover */
+            transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(128, 0, 0, 0.3);
         }
 
-        /* Video dan Canvas */
         video, canvas {
             border: 3px solid #800000;
             margin: 15px auto;
@@ -66,53 +64,50 @@
             transition: box-shadow 0.3s ease;
             width: 300px;
             height: 200px;
-            object-fit: cover; /* Agar gambar/logo pas di dalam border */
+            object-fit: cover;
         }
 
-        /* Logo tanpa border dan box-shadow untuk menyatu dengan latar */
         #logo {
             border: none;
             box-shadow: none;
             margin: 15px auto;
             border-radius: 15px;
             display: block;
-            transition: opacity 0.5s ease; /* Transisi opacity untuk fade in/out */
+            transition: opacity 0.5s ease;
             width: 300px;
             height: 200px;
-            object-fit: cover; /* Agar gambar/logo pas di dalam border */
-            opacity: 1; /* Mulai dengan opacity penuh */
+            object-fit: cover;
+            opacity: 1;
         }
 
         video:hover, canvas:hover {
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
-        /* Button */
         button {
-            background: linear-gradient(45deg, #800000, #a00000); /* Gradient maroon */
+            background: linear-gradient(45deg, #800000, #a00000);
             color: #ffffff;
             border: none;
             padding: 12px 25px;
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 25px; /* Lebih bulat */
+            border-radius: 25px;
             margin: 15px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(128, 0, 0, 0.3);
         }
 
         button:hover {
-            background: linear-gradient(45deg, #a00000, #c00000); /* Gradient lebih terang */
-            transform: scale(1.05); /* Efek zoom */
+            background: linear-gradient(45deg, #a00000, #c00000);
+            transform: scale(1.05);
             box-shadow: 0 6px 15px rgba(128, 0, 0, 0.4);
         }
 
         button:active {
-            transform: scale(0.98); /* Efek tekan */
+            transform: scale(0.98);
         }
 
-        /* Div untuk result, error, status */
         #result {
             margin-top: 20px;
             font-size: 1.2rem;
@@ -121,30 +116,32 @@
             padding: 15px;
             border-radius: 15px;
             box-shadow: 0 4px 10px rgba(128, 0, 0, 0.3);
-            animation: slideIn 0.5s ease-out; /* Animasi masuk */
+            animation: slideIn 0.5s ease-out;
+            display: none; /* Sembunyikan default */
         }
 
         #error {
-            color: #d32f2f; /* Merah gelap */
+            color: #d32f2f;
             background: linear-gradient(45deg, #ffebee, #ffcdd2);
             padding: 15px;
             border-radius: 15px;
             box-shadow: 0 4px 10px rgba(211, 47, 47, 0.2);
             animation: slideIn 0.5s ease-out;
+            display: none;
+            margin-top: 20px;
         }
 
         #status {
             margin-top: 15px;
             font-size: 1rem;
             color: #333;
-            background: linear-gradient(45deg, #e8f5e8, #c8e6c9); /* Hijau lembut */
+            background: linear-gradient(45deg, #e8f5e8, #c8e6c9);
             padding: 15px;
             border-radius: 15px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             animation: slideIn 0.5s ease-out;
         }
 
-        /* Animasi */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -155,101 +152,89 @@
             to { opacity: 1; transform: translateX(0); }
         }
 
-        /* Responsif untuk HP atau mode potret */
         @media (max-width: 768px) or (orientation: portrait) {
-            body {
-                padding: 10px;
-            }
-
-            h1 {
-                font-size: 2rem; /* Lebih kecil di HP */
-            }
-
-            p {
-                font-size: 1rem;
-            }
-
-            .container {
-                max-width: 100%;
-                padding: 20px;
-                border-radius: 15px;
-            }
-
-            video, canvas, #logo {
-                width: 100%;
-                max-width: 300px;
-                height: auto; /* Sesuaikan tinggi otomatis */
-            }
-
-            button {
-                width: 100%;
-                max-width: 250px;
-                padding: 15px;
-                font-size: 1.2rem;
-            }
-
-            #result, #error, #status {
-                font-size: 1rem;
-                padding: 12px;
-            }
+            body { padding: 10px; }
+            h1 { font-size: 2rem; }
+            p { font-size: 1rem; }
+            .container { max-width: 100%; padding: 20px; border-radius: 15px; }
+            video, canvas, #logo { width: 100%; max-width: 300px; height: auto; }
+            button { width: 100%; max-width: 250px; padding: 15px; font-size: 1.2rem; }
+            #result, #error, #status { font-size: 1rem; padding: 12px; }
         }
 
-        /* Untuk layar sangat kecil (HP lama) */
         @media (max-width: 480px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            .container {
-                padding: 15px;
-            }
-
-            video, canvas, #logo {
-                max-width: 250px;
-            }
+            h1 { font-size: 1.8rem; }
+            .container { padding: 15px; }
+            video, canvas, #logo { max-width: 250px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Absensi Anggota/Player MB UMM</h1>
-        <p>Arahkan kamera ke QR code anggota untuk mencatat absensi.</p>
-        <video id="video" width="300" height="200" autoplay style="display: none;"></video>
-        <img id="logo" src="1.png" alt="Logo MB UMM"> <!-- Logo lokal, ganti path jika perlu -->
+        <h1>Absensi MB UMM</h1>
+        <p>Arahkan kamera ke QR code untuk mencatat kehadiran.</p>
+        
+        <video id="video" width="300" height="200" autoplay playsinline style="display: none;"></video>
+        <img id="logo" src="1.png" alt="Logo MB UMM">
         <canvas id="canvas" width="300" height="200" style="display:none;"></canvas>
+        
         <button id="toggleScan">Start Scanning</button>
         <div id="result"></div>
         <div id="error"></div>
-        <div id="status">Siap untuk memulai scanning. Klik tombol untuk mengaktifkan kamera.</div>
+        <div id="status">Siap untuk memulai. Klik tombol di atas untuk mengaktifkan kamera.</div>
     </div>
 
+    <!-- Pustaka jsQR -->
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    
     <script>
         const video = document.getElementById('video');
-        const logo = document.getElementById('logo'); // Elemen logo
+        const logo = document.getElementById('logo');
         const canvas = document.getElementById('canvas');
         const resultDiv = document.getElementById('result');
         const errorDiv = document.getElementById('error');
         const statusDiv = document.getElementById('status');
         const toggleScanBtn = document.getElementById('toggleScan');
-        const canvasContext = canvas.getContext('2d');
+        const canvasContext = canvas.getContext('2d', { willReadFrequently: true });
 
-        let stream = null; // Untuk menyimpan stream kamera
-        let lastSentData = null;  // Untuk melacak data QR terakhir yang dikirim
-        let lastSentTime = 0;     // Waktu terakhir pengiriman (dalam ms)
-        const cooldownPeriod = 3000;  // Cooldown 3 detik untuk mencegah spam
-        let scanningEnabled = false;   // Flag untuk mengontrol scanning, mulai dengan false
+        let stream = null;
+        let lastSentData = null;
+        let lastSentTime = 0;
+        const cooldownPeriod = 3000;
+        let scanningEnabled = false;
 
-        // Array logo untuk berganti-ganti
-        const logos = ['1.png', '2.png']; // Asumsikan ada logo.png dan logo2.png
+        // Variabel untuk optimasi kinerja scanner
+        let lastScanTime = 0;
+        const scanInterval = 300; // jsQR dipanggil maksimal tiap 300ms
+
+        // Fungsi Audio Feedback menggunakan Web Audio API (Tanpa file eksternal)
+        function playBeep() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // 880Hz pitch (Nada A5)
+                
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); // Volume 10%
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.15); // Durasi beep 150ms
+            } catch(e) {
+                console.log('Audio API tidak didukung:', e);
+            }
+        }
+
+        const logos = ['1.png', '2.png'];
         let logoIndex = 0;
 
-        // Fungsi untuk berganti logo setiap 3 detik dengan fade in/out jika logo sedang ditampilkan
         setInterval(() => {
             if (logo.style.display === 'block') {
-                // Fade out
                 logo.style.opacity = '0';
-                // Setelah fade out selesai (0.5s), ganti src dan fade in
                 setTimeout(() => {
                     logoIndex = (logoIndex + 1) % logos.length;
                     logo.src = logos[logoIndex];
@@ -258,14 +243,11 @@
             }
         }, 3000);
 
-        // Fungsi untuk mendapatkan device ID kamera belakang utama (bukan wide)
         async function getRearCameraDeviceId() {
             try {
                 const devices = await navigator.mediaDevices.enumerateDevices();
                 const videoDevices = devices.filter(device => device.kind === 'videoinput');
                 
-                // Cari kamera belakang (environment) yang bukan wide atau ultra-wide
-                // Prioritas: hindari label yang mengandung "wide", "ultra", atau "telephoto"
                 let rearCamera = videoDevices.find(device => 
                     device.facingMode === 'environment' && 
                     !device.label.toLowerCase().includes('wide') && 
@@ -273,7 +255,6 @@
                     !device.label.toLowerCase().includes('telephoto')
                 );
                 
-                // Jika tidak ditemukan, ambil kamera belakang pertama
                 if (!rearCamera) {
                     rearCamera = videoDevices.find(device => device.facingMode === 'environment');
                 }
@@ -285,42 +266,56 @@
             }
         }
 
-        // Fungsi untuk memulai kamera
         async function startCamera() {
             try {
+                // SOLUSI: Minta izin kamera secara generik terlebih dahulu agar label perangkat terbaca
+                let tempStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                
                 const deviceId = await getRearCameraDeviceId();
+                
+                // Matikan stream sementara setelah mendapatkan ID
+                tempStream.getTracks().forEach(track => track.stop());
+                
+                // Mulai ulang dengan ID kamera yang tepat
                 const constraints = deviceId 
                     ? { video: { deviceId: { exact: deviceId } } } 
-                    : { video: { facingMode: 'environment' } }; // Fallback jika enumerate gagal
+                    : { video: { facingMode: 'environment' } };
                 
                 stream = await navigator.mediaDevices.getUserMedia(constraints);
                 video.srcObject = stream;
+                
+                // Diperlukan untuk Safari di iOS
+                video.setAttribute("playsinline", true);
                 video.play();
-                video.style.display = 'block'; // Tampilkan video
-                logo.style.display = 'none'; // Sembunyikan logo
+                
+                video.style.display = 'block';
+                logo.style.display = 'none';
+                
                 requestAnimationFrame(tick);
                 statusDiv.textContent = 'Kamera aktif. Siap untuk scan.';
             } catch (err) {
-                errorDiv.textContent = 'Error accessing camera: ' + err.message;
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = 'Gagal mengakses kamera: Pastikan browser memiliki izin kamera. (' + err.message + ')';
                 console.error('Camera error:', err);
             }
         }
 
-        // Fungsi untuk menghentikan kamera
         function stopCamera() {
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
                 stream = null;
                 video.srcObject = null;
-                video.style.display = 'none'; // Sembunyikan video
-                logo.style.display = 'block'; // Tampilkan logo
-                // Logo sudah tanpa border dan box-shadow di CSS, tidak perlu set lagi
+                video.style.display = 'none';
+                logo.style.display = 'block';
                 statusDiv.textContent = 'Kamera dinonaktifkan.';
             }
         }
 
-        // Event listener untuk tombol toggle
         toggleScanBtn.addEventListener('click', function() {
+            // Sembunyikan notifikasi error/result sebelumnya
+            errorDiv.style.display = 'none';
+            resultDiv.style.display = 'none';
+
             if (scanningEnabled) {
                 scanningEnabled = false;
                 stopCamera();
@@ -333,98 +328,108 @@
             }
         });
 
+        // Tampilkan/Sembunyikan alert UI
+        function showResult(htmlContent) {
+            resultDiv.innerHTML = htmlContent;
+            resultDiv.style.display = 'block';
+            errorDiv.style.display = 'none';
+        }
+
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            resultDiv.style.display = 'none';
+        }
+
         function tick() {
             if (video.readyState === video.HAVE_ENOUGH_DATA && scanningEnabled && stream) {
-                canvas.height = video.videoHeight;
-                canvas.width = video.videoWidth;
-                canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const imageData = canvasContext.getImageData(0, 0, canvas.width, canvas.height);
-                const code = jsQR(imageData.data, imageData.width, imageData.height);
-
-                if (code) {
-                    console.log('QR code detected:', code.data);  // Debug log
-                    // Parse data QR (format: "Id:...,Nama:...,Section:...,NIM:...,Email:...")
-                    const data = code.data;
-                    const parsed = {};
-                    data.split(',').forEach(pair => {
-                        const parts = pair.split(':');
-                        if (parts.length === 2) {
-                            const key = parts[0].trim();
-                            const value = parts[1].trim();
-                            parsed[key] = value;
-                        }
+                const currentTime = Date.now();
+                
+                // OPTIMASI: Batasi frekuensi pemrosesan jsQR menjadi 1x tiap 300ms
+                if (currentTime - lastScanTime >= scanInterval) {
+                    canvas.height = video.videoHeight;
+                    canvas.width = video.videoWidth;
+                    canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    const imageData = canvasContext.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: "dontInvert",
                     });
 
-                    if (parsed.Id && parsed.Nama) {
-                        const currentTime = Date.now();
-                        // Cek apakah data sama dengan yang terakhir dikirim dan dalam cooldown
-                        if (lastSentData === data && (currentTime - lastSentTime) < cooldownPeriod) {
-                            console.log('Skipping duplicate scan within cooldown period.');
-                            statusDiv.textContent = 'QR code sudah tercatat baru-baru ini. Tunggu beberapa detik.';
-                            return;  // Lewati pengiriman
-                        }
+                    lastScanTime = currentTime;
 
-                        // Nonaktifkan scanning sementara
-                        scanningEnabled = false;
-                        statusDiv.textContent = 'Memproses absensi...';
+                    if (code) {
+                        try {
+                            // LOGIKA BARU: Parsing JSON sesuai standar generate_qr_updated.py
+                            const parsed = JSON.parse(code.data);
 
-                        // Pesan result dengan nama dan section lebih besar
-                        resultDiv.innerHTML = `<b><i>Berhasil</i></b>: <span style="font-size: 1.5em;">${parsed.Nama} (${parsed.Section})</span> - <b><i>Data dikirim</i></b>!`;
-                        
-                        // Kirim data ke Google Apps Script via GET
-                        const scriptUrl = 'https://script.google.com/macros/s/AKfycbw9jixiqNZh2JvAgzjrVi2YWVWYYiATGucsi0peIyGl9I3RuO04rYwCTI5H5gWBxH1jzQ/exec';  // Ganti YOUR_SCRIPT_ID
-                        const params = new URLSearchParams({
-                            id: parsed.Id,
-                            nama: parsed.Nama,
-                            section: parsed.Section || '',
-                            nim: parsed.NIM || '',
-                            email: parsed.Email || '',
-                            timestamp: new Date().toISOString()
-                        });
-                        const fullUrl = `${scriptUrl}?${params.toString()}`;
-                        console.log('Sending to:', fullUrl);  // Debug log
-                        
-                        fetch(fullUrl, {
-                            method: 'GET'
-                        })
-                        .then(response => {
-                            console.log('Response status:', response.status);  // Debug log
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log('Response data:', data);  // Debug log
-                            if (data.success) {
-                                // Konfirmasi keberhasilan sudah ditampilkan di atas
-                                lastSentData = code.data;  // Simpan data QR yang berhasil dikirim
-                                lastSentTime = currentTime;  // Simpan waktu pengiriman
-                                statusDiv.textContent = 'Absensi berhasil. Scanning dinonaktifkan selama 3 detik.';
-                                // Aktifkan kembali scanning setelah cooldown
-                                setTimeout(() => {
-                                    scanningEnabled = true;
-                                    statusDiv.textContent = 'Siap untuk scan QR code berikutnya.';
-                                    resultDiv.textContent = '';
-                                    errorDiv.textContent = '';
-                                }, cooldownPeriod);
+                            if (parsed.Id && parsed.Nama) {
+                                // Cek cooldown anti-spam
+                                if (lastSentData === code.data && (currentTime - lastSentTime) < cooldownPeriod) {
+                                    statusDiv.textContent = 'QR code sudah tercatat baru-baru ini. Tunggu beberapa detik.';
+                                    // Lewati sisa logika pengiriman
+                                } else {
+                                    // Nonaktifkan scanning saat memproses (mencegah double kirim)
+                                    scanningEnabled = false;
+                                    
+                                    // Berikan Audio Feedback ke pengguna
+                                    playBeep();
+                                    
+                                    statusDiv.textContent = 'Memproses data absensi...';
+                                    showResult(`<b><i>Berhasil Di-scan</i></b>: <br><span style="font-size: 1.4em; display: inline-block; margin-top: 5px;">${parsed.Nama} <br> (${parsed.Section})</span>`);
+                                    
+                                    // Ganti dengan URL Google Apps Script Anda
+                                    const scriptUrl = 'https://script.google.com/macros/s/AKfycbw9jixiqNZh2JvAgzjrVi2YWVWYYiATGucsi0peIyGl9I3RuO04rYwCTI5H5gWBxH1jzQ/exec';
+                                    const params = new URLSearchParams({
+                                        id: parsed.Id,
+                                        nama: parsed.Nama,
+                                        section: parsed.Section || '',
+                                        nim: parsed.NIM || '',
+                                        email: parsed.Email || '',
+                                        timestamp: new Date().toISOString()
+                                    });
+                                    const fullUrl = `${scriptUrl}?${params.toString()}`;
+                                    
+                                    fetch(fullUrl, { method: 'GET' })
+                                    .then(response => {
+                                        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                                        return response.json();
+                                    })
+                                    .then(data => {
+                                        if (data.success) {
+                                            lastSentData = code.data;
+                                            lastSentTime = Date.now();
+                                            statusDiv.textContent = 'Data terkirim. Jeda 3 detik sebelum scan berikutnya...';
+                                            
+                                            // Lanjutkan scan setelah cooldown selesai
+                                            setTimeout(() => {
+                                                scanningEnabled = true;
+                                                statusDiv.textContent = 'Kamera aktif. Siap untuk scan QR berikutnya.';
+                                                resultDiv.style.display = 'none'; // Sembunyikan notifikasi berhasil
+                                            }, cooldownPeriod);
+                                        } else {
+                                            showError('Server Google Sheet menolak: ' + data.error);
+                                            scanningEnabled = true;
+                                            statusDiv.textContent = 'Gagal menyimpan data. Silakan coba lagi.';
+                                        }
+                                    })
+                                    .catch(err => {
+                                        showError('Koneksi Error: Gagal menghubungi Google Apps Script.');
+                                        scanningEnabled = true;
+                                        statusDiv.textContent = 'Silakan coba lagi.';
+                                        console.error(err);
+                                    });
+                                }
                             } else {
-                                errorDiv.textContent = 'Error mengirim data: ' + data.error;
-                                scanningEnabled = true;  // Aktifkan kembali jika gagal
-                                statusDiv.textContent = 'Gagal mengirim. Coba lagi.';
+                                showError('Struktur data JSON QR tidak lengkap (ID atau Nama tidak ditemukan).');
                             }
-                        })
-                        .catch(err => {
-                            console.error('Fetch error:', err);  // Debug log
-                            errorDiv.textContent = 'Failed to fetch: ' + err.message + '. Periksa URL Apps Script.';
-                            scanningEnabled = true;  // Aktifkan kembali jika error
-                            statusDiv.textContent = 'Error. Coba lagi.';
-                        });
-                    } else {
-                        errorDiv.textContent = 'QR code tidak valid atau format salah.';
+                        } catch (e) {
+                            showError('Format QR tidak didukung. Harap gunakan QR Code JSON anggota MB UMM yang terbaru.');
+                            console.warn("Isi QR bukan JSON:", code.data);
+                        }
                     }
                 }
             }
+            // Terus panggil fungsi tick jika stream masih ada (di luar blok pembatasan scanInterval)
             if (stream) {
                 requestAnimationFrame(tick);
             }
